@@ -1408,7 +1408,9 @@ class Node(PropertyContainer):
         if inst is None:
             new_inst = cls()
             new_inst.__stale.update({"labels", "properties"})
-            inst = cls.cache.setdefault(self, new_inst)
+            if self not in cls.cache:
+                cls.cache[self] = new_inst
+            inst = cls.cache[self]
         cls.cache[self] = inst
         inst.bind(self, data)
         if "data" in data:
